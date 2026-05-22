@@ -69,4 +69,71 @@ Page({
     });
   },
 
+  /**
+   * 输入框内容变化事件处理器
+   * 每当用户输入一个字符，实时将输入值同步到 data.inputValue
+   * @param {Object} e - 事件对象，e.detail.value 为输入框当前值
+   */
+  onInputChange(e) {
+    this.setData({
+      inputValue: e.detail.value,
+    });
+  },
+
+  /**
+   * 新增待办任务
+   * 触发方式：点击"+"按钮 或 键盘回车（bindconfirm）
+   * 执行流程：
+   *   1. 校验输入内容不能为空
+   *   2. 构造新任务对象（id 使用当前时间戳保证唯一性）
+   *   3. 将新任务插入数组头部（最新的在最上面）
+   *   4. 持久化保存到本地存储
+   *   5. 刷新页面统计数据
+   *   6. 清空输入框 + 弹出成功 Toast
+   */
+  addTodo() {
+    // 去除首尾空格后进行非空校验
+    const content = this.data.inputValue.trim();
+    if (!content) {
+      // 输入为空时轻提示，不做任何操作
+      wx.showToast({
+        title: '请输入待办内容',
+        icon: 'none',
+        duration: 1500,
+      });
+      return;
+    }
+
+    // 构造新任务对象
+    const now = new Date();
+    // 格式化创建时间：今天 HH:MM
+    const hours   = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const newTodo = {
+      id:          now.getTime(),    // 时间戳作为唯一 id
+      content:     content,          // 用户输入的任务内容
+      completed:   false,            // 新任务默认未完成
+      createTime:  `今天 ${hours}:${minutes}`, // 创建时间标签
+    };
+
+    // 从 data 中取出当前列表，并将新任务插入数组最前面
+    const todos = [newTodo, ...this.data.todos];
+
+    // 持久化保存到本地存储
+    wx.setStorageSync('todos', todos);
+
+    // 刷新页面数据（复用 loadTodos 的统计逻辑，保持单一数据源）
+    this.loadTodos();
+
+    // 清空输入框
+    this.setData({ inputValue: '' });
+
+    // 弹出成功提示（使用 success 图标增强反馈感）
+    wx.showToast({
+      title: '添加成功！',
+      icon: 'success',
+      duration: 1200,
+    });
+  },
+
 })

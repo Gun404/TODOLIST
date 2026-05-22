@@ -35,9 +35,9 @@
       <text class="input-icon">✏️</text>
       <!--
         任务输入框
-        bindinput：实时监听输入内容，赋值给 data.inputValue（Step 3 实现）
-        bindconfirm：键盘回车触发添加（Step 3 实现）
-        value：绑定 inputValue，便于添加后清空输入框
+        bindinput：实时监听输入内容，赋值给 data.inputValue
+        bindconfirm：键盘右下角"完成/发送"键触发添加，提升输入体验
+        value：双向绑定 inputValue，便于 addTodo 执行后清空输入框
       -->
       <input
         id="taskInput"
@@ -45,13 +45,16 @@
         placeholder="添加新的待办事项..."
         placeholder-class="input-placeholder"
         value="{{inputValue}}"
+        bindinput="onInputChange"
+        bindconfirm="addTodo"
+        confirm-type="done"
       />
     </view>
     <!--
       添加按钮
-      bindtap：点击事件（Step 3 绑定 addTodo 方法）
+      bindtap：点击"+"按钮触发 addTodo 方法
     -->
-    <view class="add-btn" id="addBtn">
+    <view class="add-btn" id="addBtn" bindtap="addTodo">
       <text class="add-btn-icon">+</text>
     </view>
   </view>
