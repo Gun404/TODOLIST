@@ -1,7 +1,145 @@
-<!--index.wxml-->
-<navigation-bar title="Weixin" back="{{false}}" color="black" background="#FFF"></navigation-bar>
-<scroll-view class="scrollarea" scroll-y type="list">
-  <view class="container">
-    Weixin
+<!-- index.wxml - 待办清单主页面结构 -->
+<!-- 
+  页面整体布局：
+  1. 顶部英雄区：日期 + 统计摘要
+  2. 输入区：输入框 + 添加按钮
+  3. 列表区：未完成任务 + 已完成任务
+  4. 空状态：无任务时展示的提示区域
+-->
+<view class="page-wrapper">
+
+  <!-- ===== 顶部英雄区域 ===== -->
+  <view class="hero-section">
+    <view class="hero-date">2026年5月22日</view>
+    <view class="hero-title">我的待办清单</view>
+    <!-- 统计摘要（Step 5 将动态绑定，此处为静态占位） -->
+    <view class="hero-stats">
+      <view class="stat-item">
+        <text class="stat-num">2</text>
+        <text class="stat-label">已完成</text>
+      </view>
+      <view class="stat-divider"></view>
+      <view class="stat-item">
+        <text class="stat-num">3</text>
+        <text class="stat-label">未完成</text>
+      </view>
+    </view>
   </view>
-</scroll-view>
+
+  <!-- ===== 输入区域 ===== -->
+  <view class="input-section">
+    <view class="input-wrapper">
+      <!-- 输入框图标 -->
+      <text class="input-icon">✏️</text>
+      <!-- 任务输入框（Step 3 绑定事件） -->
+      <input
+        class="task-input"
+        placeholder="添加新的待办事项..."
+        placeholder-class="input-placeholder"
+      />
+    </view>
+    <!-- 添加按钮（Step 3 绑定事件） -->
+    <view class="add-btn">
+      <text class="add-btn-icon">+</text>
+    </view>
+  </view>
+
+  <!-- ===== 任务列表区域 ===== -->
+  <!-- 当有任务数据时显示 -->
+  <scroll-view class="list-section" scroll-y="true">
+
+    <!-- --- 未完成任务分组 --- -->
+    <view class="group-header">
+      <view class="group-dot dot-active"></view>
+      <text class="group-title">待完成</text>
+      <text class="group-count">3</text>
+    </view>
+
+    <!-- 未完成任务列表（此处为静态假数据，Step 2 替换为动态渲染） -->
+    <!-- 任务项：未完成状态 -->
+    <view class="task-item">
+      <view class="task-check unchecked">
+        <view class="check-inner"></view>
+      </view>
+      <view class="task-content-wrap">
+        <text class="task-text">完成移动应用期末大作业</text>
+        <text class="task-time">今天</text>
+      </view>
+      <view class="task-delete-btn">
+        <text class="delete-icon">🗑</text>
+      </view>
+    </view>
+
+    <view class="task-item">
+      <view class="task-check unchecked">
+        <view class="check-inner"></view>
+      </view>
+      <view class="task-content-wrap">
+        <text class="task-text">复习数据结构与算法</text>
+        <text class="task-time">今天</text>
+      </view>
+      <view class="task-delete-btn">
+        <text class="delete-icon">🗑</text>
+      </view>
+    </view>
+
+    <view class="task-item">
+      <view class="task-check unchecked">
+        <view class="check-inner"></view>
+      </view>
+      <view class="task-content-wrap">
+        <text class="task-text">提交毕业论文初稿</text>
+        <text class="task-time">今天</text>
+      </view>
+      <view class="task-delete-btn">
+        <text class="delete-icon">🗑</text>
+      </view>
+    </view>
+
+    <!-- --- 已完成任务分组 --- -->
+    <view class="group-header group-header-done">
+      <view class="group-dot dot-done"></view>
+      <text class="group-title">已完成</text>
+      <text class="group-count">2</text>
+    </view>
+
+    <!-- 任务项：已完成状态 -->
+    <view class="task-item task-item-done">
+      <view class="task-check checked">
+        <text class="check-tick">✓</text>
+      </view>
+      <view class="task-content-wrap">
+        <text class="task-text task-text-done">购买新的编程书籍</text>
+        <text class="task-time">今天</text>
+      </view>
+      <view class="task-delete-btn">
+        <text class="delete-icon">🗑</text>
+      </view>
+    </view>
+
+    <view class="task-item task-item-done">
+      <view class="task-check checked">
+        <text class="check-tick">✓</text>
+      </view>
+      <view class="task-content-wrap">
+        <text class="task-text task-text-done">和同学讨论项目需求</text>
+        <text class="task-time">今天</text>
+      </view>
+      <view class="task-delete-btn">
+        <text class="delete-icon">🗑</text>
+      </view>
+    </view>
+
+    <!-- 底部留白，防止内容被遮挡 -->
+    <view class="list-bottom-spacer"></view>
+  </scroll-view>
+
+  <!-- ===== 空状态区域（当无任务时显示，Step 2 通过 wx:if 控制） ===== -->
+  <!-- 暂时隐藏，用于UI预览 -->
+  <view class="empty-state" style="display:none;">
+    <text class="empty-icon">📋</text>
+    <text class="empty-title">一切井然有序！</text>
+    <text class="empty-subtitle">点击上方输入框，添加你的第一个待办事项</text>
+  </view>
+
+</view>
