@@ -88,8 +88,12 @@
         class="task-item"
         id="todo-{{item.id}}"
       >
-        <!-- 复选框 - 未选中状态（Step 4 绑定点击切换事件） -->
-        <view class="task-check unchecked" data-id="{{item.id}}">
+        <!--
+          复选框 - 未选中状态
+          bindtap：点击触发 toggleTodo，切换为已完成
+          data-id：将任务 id 传入事件对象供方法读取
+        -->
+        <view class="task-check unchecked" data-id="{{item.id}}" bindtap="toggleTodo">
           <view class="check-inner"></view>
         </view>
         <!-- 任务文字内容区 -->
@@ -97,8 +101,12 @@
           <text class="task-text">{{item.content}}</text>
           <text class="task-time">{{item.createTime}}</text>
         </view>
-        <!-- 删除按钮（Step 4 绑定点击删除事件） -->
-        <view class="task-delete-btn" data-id="{{item.id}}" id="del-{{item.id}}">
+        <!--
+          删除按钮
+          bindtap：点击触发 deleteTodo，弹出确认框后删除
+          data-id：将任务 id 传入事件对象
+        -->
+        <view class="task-delete-btn" data-id="{{item.id}}" id="del-{{item.id}}" bindtap="deleteTodo">
           <text class="delete-icon">🗑</text>
         </view>
       </view>
@@ -124,8 +132,12 @@
         class="task-item task-item-done"
         id="done-{{item.id}}"
       >
-        <!-- 复选框 - 已选中状态（Step 4 绑定点击切换事件） -->
-        <view class="task-check checked" data-id="{{item.id}}">
+        <!--
+          复选框 - 已选中状态
+          bindtap：点击触发 toggleTodo，切换回未完成
+          data-id：将任务 id 传入事件对象
+        -->
+        <view class="task-check checked" data-id="{{item.id}}" bindtap="toggleTodo">
           <text class="check-tick">✓</text>
         </view>
         <!-- 任务文字内容区 -->
@@ -134,8 +146,12 @@
           <text class="task-text task-text-done">{{item.content}}</text>
           <text class="task-time">{{item.createTime}}</text>
         </view>
-        <!-- 删除按钮 -->
-        <view class="task-delete-btn" data-id="{{item.id}}" id="del-done-{{item.id}}">
+        <!--
+          删除按钮（已完成任务）
+          bindtap：点击触发 deleteTodo，弹出确认框后删除
+          data-id：将任务 id 传入事件对象
+        -->
+        <view class="task-delete-btn" data-id="{{item.id}}" id="del-done-{{item.id}}" bindtap="deleteTodo">
           <text class="delete-icon">🗑</text>
         </view>
       </view>

@@ -136,4 +136,86 @@ Page({
     });
   },
 
+  /**
+   * 切换待办事项的完成状态
+   * 触发方式：点击任务卡片左侧的圆形复选框
+   * 执行流程：
+   *   1. 从事件对象中获取目标任务的 id
+   *   2. 遍历 todos 数组，找到对应 id 的任务，取反其 completed 字段
+   *   3. 持久化保存更新后的数组到本地存储
+   *   4. 重新调用 loadTodos 刷新视图和统计数据
+   *   5. 提供轻震动触觉反馈（vibrateShort）
+   * @param {Object} e - 事件对象，e.currentTarget.dataset.id 为目标任务 id
+   */
+  toggleTodo(e) {
+    // 从 dataset 中取出目标任务的 id（注意：dataset 传值会转为字符串，需与数字比较时注意类型）
+    const id = e.currentTarget.dataset.id;
+
+    // 遍历数组，找到对应任务并翻转其完成状态
+    const todos = this.data.todos.map(item => {
+      if (item.id === id) {
+        return { ...item, completed: !item.completed };
+      }
+      return item;
+    });
+
+    // 持久化保存到本地存储
+    wx.setStorageSync('todos', todos);
+
+    // 刷新页面数据与统计
+    this.loadTodos();
+
+    // 轻震动触觉反馈，让操作更有实感（短震动，不打扰用户）
+    wx.vibrateShort({ type: 'light' });
+  },
+
+  /**
+   * 删除指定待办事项
+   * 触发方式：点击任务卡片右侧的垃圾桶图标
+   * 执行流程：
+   *   1. 从事件对象中获取目标任务的 id
+   *   2. 弹出二次确认对话框，防止误删
+   *   3. 用户确认后：使用 filter 过滤掉对应 id 的任务
+   *   4. 持久化保存过滤后的数组到本地存储
+   *   5. 重新调用 loadTodos 刷新视图
+   *   6. 提供中等强度震动反馈
+   * @param {Object} e - 事件对象，e.currentTarget.dataset.id 为目标任务 id
+   */
+  deleteTodo(e) {
+    // 从 dataset 中取出目标任务的 id
+    const id = e.currentTarget.dataset.id;
+
+    // 弹出二次确认，防止误操作
+    wx.showModal({
+      title: '删除任务',
+      content: '确认删除此待办事项？',
+      confirmText: '删除',
+      confirmColor: '#FF4D4F',  // 红色确认按钮，危险操作警示
+      cancelText: '取消',
+      success: (res) => {
+        // 用户点击"删除"确认按钮
+        if (res.confirm) {
+          // 使用 filter 过滤掉目标 id，生成新数组（不改变原数组）
+          const todos = this.data.todos.filter(item => item.id !== id);
+
+          // 持久化保存到本地存储
+          wx.setStorageSync('todos', todos);
+
+          // 刷新页面数据与统计（任务减少后可能触发空状态显示）
+          this.loadTodos();
+
+          // 中等强度震动反馈，区别于状态切换的轻震动
+          wx.vibrateShort({ type: 'medium' });
+
+          // 删除成功提示
+          wx.showToast({
+            title: '已删除',
+            icon: 'none',
+            duration: 1000,
+          });
+        }
+      },
+    });
+  },
+
 })
