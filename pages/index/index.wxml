@@ -1,8 +1,8 @@
 <!-- index.wxml - 待办清单主页面结构 -->
 <!--
   页面整体布局：
-  1. 顶部英雄区：日期 + 统计摘要（数字绑定 JS data）
-  2. 输入区：输入框 + 添加按钮（Step 3 绑定事件）
+  1. 顶部英雄区：日期 + 统计数字 + 进度条 + 动态激励文案
+  2. 输入区：输入框 + 添加按钮
   3. 列表区：wx:for 动态渲染未完成/已完成任务，wx:if 控制分组显示
   4. 空状态：isEmpty 为 true 时展示
 -->
@@ -10,12 +10,14 @@
 
   <!-- ===== 顶部英雄区域 ===== -->
   <view class="hero-section">
+    <!-- 当前日期，由 onLoad 动态计算后 setData 写入 -->
     <view class="hero-date">{{currentDate}}</view>
     <view class="hero-title">我的待办清单</view>
-    <!-- 统计摘要（绑定 JS 中的 doneCount / todoCount） -->
+
+    <!-- 统计摘要卡片（绑定 JS 中的 doneCount / todoCount） -->
     <view class="hero-stats">
       <view class="stat-item">
-        <!-- 已完成数量，由 loadTodos 计算并 setData 更新 -->
+        <!-- 已完成数量，由 loadTodos() 实时计算更新 -->
         <text class="stat-num">{{doneCount}}</text>
         <text class="stat-label">已完成</text>
       </view>
@@ -24,6 +26,28 @@
         <!-- 未完成数量 -->
         <text class="stat-num">{{todoCount}}</text>
         <text class="stat-label">未完成</text>
+      </view>
+    </view>
+
+    <!--
+      进度条区域（Step 5 新增亮点）
+      显示今日任务完成百分比，通过 style 动态设置进度条宽度
+    -->
+    <view class="progress-section">
+      <!-- 动态激励文案：根据完成进度由 loadTodos 选取不同文案 -->
+      <view class="progress-label-row">
+        <text class="progress-motivation">{{motivationText}}</text>
+        <!-- 完成百分比数字，为 0 时不显示避免歧义 -->
+        <text class="progress-percent" wx:if="{{completedPercent > 0}}">{{completedPercent}}%</text>
+      </view>
+      <!-- 进度条轨道（背景） -->
+      <view class="progress-track">
+        <!--
+          进度条填充部分
+          style 中的 width 由 completedPercent 驱动（0% ~ 100%）
+          transition 由 WXSS 中定义，切换任务状态时有平滑动画
+        -->
+        <view class="progress-fill" style="width: {{completedPercent}}%;"></view>
       </view>
     </view>
   </view>
